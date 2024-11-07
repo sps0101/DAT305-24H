@@ -2,7 +2,7 @@
 """
 
 Task 6: Sentiment Analysis of US Airline Tweets
-Mentor to be contacted: Shaima Ahmad Freja (sa.freja@stud.uis.no)
+
 Goal: The goal of this project is to classify tweets related to US airlines into positive, neutral, or
 negative sentiments. The students will design and implement a classification model to predict the
 sentiment of airline-related tweets. They will experiment with various machine learning or deep
