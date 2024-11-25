@@ -15,6 +15,9 @@ multiclass classification problem.
 
 """
 
+#Code written by Steinar Sæverud and ChatGPT
+
+
 #Importing libraries
 
 
@@ -71,7 +74,7 @@ ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 
 
-#Stemiing the tweets
+#Stemming the tweets
 def preprocess_text(text, use_stemming=True):
     # Tokenize the text
     tokens = word_tokenize(text)
@@ -111,7 +114,6 @@ category_counts = tweets_df['airline_sentiment'].value_counts()
 print("Count of each sentiment category:\n", category_counts)
 
 
-
 if 'airline_sentiment' in tweets_df.columns:
     sentiment_counts = tweets_df['airline_sentiment'].value_counts()
     unique_sentiments = tweets_df['airline_sentiment'].nunique()
@@ -123,10 +125,7 @@ else:
     
     
 
-
-#Plotting data, graph and word cloud
-
-"""  
+#Word cloud
     
 def plot_sentiment_distribution(df):
     sentiment_counts = df['airline_sentiment'].value_counts()
@@ -157,10 +156,7 @@ plot_sentiment_distribution(tweets_df)
 for sentiment in tweets_df['airline_sentiment'].unique():
     plot_word_cloud(tweets_df, sentiment)
 
-# Plot for tid
-
-
-
+# Plot for time
 
 def plot_sentiment_over_time(df):
     # Ensure 'tweet_created' is in datetime format
@@ -181,34 +177,31 @@ def plot_sentiment_over_time(df):
     plt.legend(title='Sentiment')
     plt.show()
     
-
-
 # Call the function to plot sentiment over time
 plot_sentiment_over_time(tweets_df)
 
-
+#plot per day
 
 def plot_tweets_per_day(df):
     if 'tweet_created' not in df.columns:
         print("Feil: Kolonnen 'tweet_created' finnes ikke.")
         return
 
-    # Konverter 'tweet_created' til datetime
+    # Convert 'tweet_created' to datatime
     try:
         df['tweet_created'] = pd.to_datetime(df['tweet_created'], errors='coerce')
         df = df.dropna(subset=['tweet_created'])
     except Exception as e:
-        print(f"Feil ved konvertering av 'tweet_created' til datetime: {e}")
+        print(f"Mistake when converting 'tweet_created' to datatime: {e}")
         return
     
-    # Sett 'tweet_created' som index
+    # Add 'tweet_created' as index
     df.set_index('tweet_created', inplace=True)
 
-    # Tell tweets per dag
+    # Counting tweets per day
     tweets_per_day = df.resample('D').size()
 
-    
-    # Plot data
+    # Plot graph
     plt.figure(figsize=(12, 6))
     tweets_per_day.plot(kind='bar', color='lightblue')
     plt.title('Number of Tweets Per Day')
@@ -223,10 +216,8 @@ def plot_tweets_per_day(df):
 plot_tweets_per_day(tweets_df)
 
 
-
-
 def plot_monthly_sentiment_trends(df):
-    # Sjekk om nødvendige kolonner finnes
+    #Check if the necessary columns exist
     required_columns = ['tweet_created', 'airline_sentiment']
     for column in required_columns:
         if column not in df.columns:
@@ -234,27 +225,27 @@ def plot_monthly_sentiment_trends(df):
             print("Tilgjengelige kolonner:", df.columns.tolist())
             return
 
-    # Konverter 'tweet_created' til datetime-format, håndter ugyldige verdier
+    # Convert 'tweet_created' to datetime format, handle invalid values.
     df['tweet_created'] = pd.to_datetime(df['tweet_created'], errors='coerce')
     
-    # Filtrer ut rader med ugyldige datoer
+    # Filter out rows with invalid dates.
     df = df.dropna(subset=['tweet_created'])
     
     if df.empty:
         print("Datasettet inneholder ingen gyldige datoer etter filtrering.")
         return
 
-    # Opprett en 'month_year'-kolonne for gruppering
+    # Group by 'month_year' and 'airline_sentiment'.
     df['month_year'] = df['tweet_created'].dt.to_period('M')
 
-    # Gruppér etter 'month_year' og 'airline_sentiment'
+    # Group by 'month_year' and 'airline_sentiment'.
     try:
         monthly_sentiment = df.groupby(['month_year', 'airline_sentiment']).size().unstack(fill_value=0)
     except Exception as e:
         print(f"Feil ved gruppering av data: {e}")
         return
 
-    # Plot data
+    # Plot graph
     plt.figure(figsize=(12, 6))
     monthly_sentiment.plot(kind='line', marker='o', ax=plt.gca())
     plt.title('Monthly Sentiment Trends')
@@ -266,8 +257,9 @@ def plot_monthly_sentiment_trends(df):
     plt.tight_layout()
     plt.show()
 
-# Kall funksjonen for å plotte månedlige sentimenttrender
+# Call the function to plot monthly sentiment trends."
 plot_monthly_sentiment_trends(tweets_df)
+
 
 
 #Running deep learning model
@@ -393,9 +385,7 @@ print(f"Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}")
 
 
 
-print ("Do an extra model ")
-print ("This is a Logistic Regression mode, anlysis of twees, transformed into TF-IDF features. ")
-
+print ("This is a Logistic Regression mode, analysis of tweets, transformed into TF-IDF features. ")
 
 
 # Pandas display options to show all columns without width restriction
@@ -427,4 +417,4 @@ y_pred = log_reg.predict(X_test_tfidf)
 # Evaluate the model
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
-"""
+
